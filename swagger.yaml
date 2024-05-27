@@ -1,0 +1,341 @@
+openapi: 3.0.0
+info:
+  title: blog-api
+  contact: {}
+  version: "1.0"
+servers:
+  - url: https://blog-server-wto6.onrender.com/api/v1
+    variables: {}
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: register user
+      operationId: registeruser
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/registeruserrequest"
+                - example:
+                    name: lulu
+                    email: lulu5656@gmail.com
+                    password: secret
+            example:
+              name: lulu
+              email: lulu5656@gmail.com
+              password: secret
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: login user
+      operationId: loginuser
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/loginuserrequest"
+                - example:
+                    email: ann2@gmail.com
+                    password: secret
+            example:
+              email: ann2@gmail.com
+              password: secret
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /posts:
+    post:
+      tags:
+        - Posts
+      summary: create post
+      operationId: createpost
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/createpostrequest"
+                - example:
+                    title: my first blog post!
+                    content: this is blog content
+                    published: false
+            example:
+              title: my first blog post!
+              content: this is blog content
+              published: false
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+    get:
+      tags:
+        - Posts
+      summary: get posts
+      operationId: getposts
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /drafts:
+    get:
+      tags:
+        - Posts
+      summary: get drafts
+      operationId: getdrafts
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /posts/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The post ID
+    get:
+      tags:
+        - Posts
+      summary: get post
+      operationId: getpost
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+    patch:
+      tags:
+        - Posts
+      summary: update post
+      operationId: updatepost
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/updatepostrequest"
+                - example:
+                    content: this is a long, interesting post.
+                    title: updated post
+                    published: true
+            example:
+              content: this is a very long, very interesting post!
+              title: updated post
+              published: true
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+    delete:
+      tags:
+        - Posts
+      summary: delete post
+      operationId: deletepost
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+  /drafts/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The draft ID
+    get:
+      tags:
+        - Posts
+      summary: get draft
+      operationId: getdraft
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /posts/{id}/comments:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The post ID
+    get:
+      tags:
+        - Comments
+      summary: get comments
+      operationId: getcomments
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+    post:
+      tags:
+        - Comments
+      summary: create comments
+      operationId: createcomments
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+  /posts/{postId}/comments{commentId}:
+    parameters:
+      - in: path
+        name: postId
+        schema:
+          type: string
+        required: true
+        description: The post ID
+      - in: path
+        name: commentId
+        schema:
+          type: string
+        required: true
+        description: The comment ID
+    delete:
+      tags:
+        - Comments
+      summary: delete comment
+      operationId: deletecomment
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+components:
+  schemas:
+    registeruserrequest:
+      title: registeruserrequest
+      required:
+        - name
+        - email
+        - password
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        name: lulu
+        email: lulu5656@gmail.com
+        password: secret
+    createpostrequest:
+      title: createpostrequest
+      required:
+        - title
+        - content
+        - published
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        published:
+          type: boolean
+      example:
+        title: my first blog post!
+        content: this is blog content
+        published: false
+    loginuserrequest:
+      title: loginuserrequest
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: ann2@gmail.com
+        password: secret
+    updatepostrequest:
+      title: updatepostrequest
+      required:
+        - content
+        - title
+        - published
+      type: object
+      properties:
+        content:
+          type: string
+        title:
+          type: string
+        published:
+          type: boolean
+      example:
+        content: this is a very long, very interesting post!
+        title: updated post
+        published: true
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+  - name: Auth
+    description: ""
+  - name: Posts
+    description: ""
+  - name: Comments
+    description: ""

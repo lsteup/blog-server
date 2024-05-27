@@ -5,7 +5,6 @@ require("jsonwebtoken");
 
 const register = async (req, res) => {
   const user = await User.create({ ...req.body });
-  res.json({ user });
   const token = user.createJWT();
   res.status(StatusCodes.CREATED).json({ user: { name: user.name }, token });
 };
@@ -31,7 +30,6 @@ const login = async (req, res) => {
 
   const token = user.createJWT();
   console.log(user.createJWT());
-  res.json({ token });
   res.status(StatusCodes.OK).json({ user: { name: user.name }, token });
 };
 

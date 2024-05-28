@@ -20,7 +20,9 @@ const getDraft = async (req, res) => {
     _id: postId,
     author: userId,
     published: false,
-  });
+  })
+    .populate("author")
+    .exec();
 
   if (!post) {
     throw new NotFoundError(`No post with id ${postId}`);
@@ -40,7 +42,9 @@ const getPost = async (req, res) => {
   const post = await Post.findOne({
     published: true,
     _id: postId,
-  });
+  })
+    .populate("author")
+    .exec();
 
   if (!post) {
     throw new NotFoundError(`No post with id ${postId}`);

@@ -28,8 +28,13 @@ const login = async (req, res) => {
     throw new UnauthenticatedError("Invalid Credentials");
   }
 
+  const posts = await Post.find({ author: user.id }).sort("createdAt");
+  user.posts = posts;
+
   const token = user.createJWT();
-  res.status(StatusCodes.OK).json({ user: { name: user.name, token } });
+  res
+    .status(StatusCodes.OK)
+    .json({ user: { name: user.name, token, posts: user.posts } });
 };
 
 module.exports = {

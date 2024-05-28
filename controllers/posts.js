@@ -19,7 +19,6 @@ const getDraft = async (req, res) => {
   const post = await Post.findOne({
     _id: postId,
     author: userId,
-    published: false,
   })
     .populate("author")
     .exec();

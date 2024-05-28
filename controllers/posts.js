@@ -21,6 +21,8 @@ const getDraft = async (req, res) => {
     author: userId,
   })
     .populate("author")
+    .exec()
+    .populate("comments")
     .exec();
 
   if (!post) {

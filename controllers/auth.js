@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const Post = require("../model/post");
+const Post = require("../models/post");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 require("jsonwebtoken");

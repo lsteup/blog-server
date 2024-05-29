@@ -70,11 +70,8 @@ const updatePost = async (req, res) => {
   }
 
   const post = await Post.findOneAndUpdate(
-    {
-      _id: postId,
-      author: userId,
-    },
-    req.body,
+    { _id: postId, author: userId },
+    { $set: req.body },
     { new: true, runValidators: true }
   );
 

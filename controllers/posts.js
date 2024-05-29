@@ -1,4 +1,5 @@
 const Post = require("../models/post");
+const User = require("../models/user");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 
@@ -102,7 +103,8 @@ const deletePost = async (req, res) => {
 };
 
 const getActivity = async (req, res) => {
-  res.send("get activity");
+  const user = await User.findOne({ _id: req.user.userId });
+  res.status(StatusCodes.OK).send(user.activity);
 };
 
 module.exports = {

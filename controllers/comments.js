@@ -18,6 +18,7 @@ const getComments = async (req, res) => {
     post: postId,
   })
     .populate("author")
+    .populate("replies")
     .exec();
   console.log(`comment ${comments}`);
   if (!comments) {

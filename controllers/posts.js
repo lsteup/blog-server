@@ -5,7 +5,6 @@ const { BadRequestError, NotFoundError } = require("../errors");
 
 const getDrafts = async (req, res) => {
   const posts = await Post.find({
-    published: false,
     author: req.user.userId,
   }).sort("createdAt");
   res.status(StatusCodes.OK).json({ posts, count: posts.length });

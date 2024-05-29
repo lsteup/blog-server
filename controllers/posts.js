@@ -65,9 +65,9 @@ const updatePost = async (req, res) => {
     params: { id: postId },
   } = req;
 
-  if (content === "" || title === "" || published === "") {
+  /*if (content === "" || title === "" || published === "") {
     throw new BadRequestError("Content or Title or Published cannot be empty");
-  }
+  }*/
 
   const post = await Post.findOneAndUpdate(
     { _id: postId, author: userId },

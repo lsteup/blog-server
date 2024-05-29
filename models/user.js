@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const UserSchema = new mongoose.Schema({
+const Schema = mongoose.Schema;
+
+const UserSchema = new Schema({
   name: {
     type: String,
     required: [true, "Please provide name"],
@@ -24,6 +26,7 @@ const UserSchema = new mongoose.Schema({
     required: [true, "Please provide password"],
     minlength: 6,
   },
+  activity: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 UserSchema.pre("save", async function (next) {

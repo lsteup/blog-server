@@ -101,6 +101,10 @@ const deletePost = async (req, res) => {
   res.status(StatusCodes.OK).send();
 };
 
+const getActivity = async (req, res) => {
+  res.send("get activity");
+};
+
 module.exports = {
   getDrafts,
   getDraft,
@@ -109,4 +113,5 @@ module.exports = {
   createPost,
   updatePost,
   deletePost,
+  getActivity,
 };

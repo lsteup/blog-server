@@ -7,6 +7,7 @@ const {
   getPosts,
   updatePost,
   deletePost,
+  getActivity,
 } = require("../controllers/posts");
 
 const authMiddleware = require("../middleware/authentication");
@@ -18,6 +19,8 @@ const {
   createComment,
   createReply,
 } = require("../controllers/comments");
+
+router.route("/activity").get(authMiddleware, getActivity);
 
 router.route("/").post(authMiddleware, createPost).get(getPosts);
 

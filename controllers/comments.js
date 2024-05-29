@@ -14,17 +14,17 @@ const getComments = async (req, res) => {
     params: { id: postId },
   } = req;
 
-  const post = await Post.findOne({
-    published: true,
-    _id: postId,
+  const comments = await Comment.find({
+    post: postId,
   })
-    .populate("comments")
+    .populate("author")
     .exec();
-  if (!post) {
-    throw new NotFoundError(`No post with id ${postId}`);
+  console.log(`comment ${comments}`);
+  if (!comments) {
+    throw new NotFoundError(`No post with post id ${postId}`);
   }
 
-  res.status(StatusCodes.OK).json({ comments: post.comments });
+  res.status(StatusCodes.OK).json({ comments: comments });
 };
 
 const getComment = async (req, res) => {
@@ -49,6 +49,7 @@ const createComment = async (req, res) => {
   if (authHeader && authHeader.startsWith("Bearer")) {
     const token = authHeader.split(" ")[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(payload);
 
     req.user = { userId: payload.userId };
     const user = await User.findOne({ _id: req.user.userId });
@@ -57,12 +58,14 @@ const createComment = async (req, res) => {
       content,
       author: user,
       authorType: "User",
+      post: postId,
     });
   } else {
     comment = new GuestAuthorComment({
       content,
       author: req.body.name,
       authorType: "Guest",
+      post: postId,
     });
   }
   await comment.save();
@@ -82,9 +85,14 @@ const deleteComment = async (req, res) => {
   res.status(StatusCodes.OK).send();
 };
 
+const createReply = async (req, res) => {
+  res.send("create reply");
+};
+
 module.exports = {
   getComments,
   getComment,
   createComment,
   deleteComment,
+  createReply,
 };

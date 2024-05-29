@@ -7,6 +7,8 @@ const CommentSchema = new Schema(
     content: { type: String, required: true },
     author: { type: Schema.Types.Mixed, required: true },
     authorType: { type: String, required: true, enum: ["Guest", "User"] },
+    replies: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+    post: { type: Schema.Types.ObjectId, ref: "Post" },
   },
   { timestamps: true }
 );

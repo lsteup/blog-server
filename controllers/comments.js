@@ -86,7 +86,20 @@ const deleteComment = async (req, res) => {
 };
 
 const createReply = async (req, res) => {
-  res.send("create reply");
+  const commentId = req.params.id;
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(" ")[1];
+  const payload = jwt.verify(token, process.env.JWT_SECRET);
+  const content = req.body.content;
+
+  const userId = payload.userId;
+  const user = await User.findById({ _id: userId });
+  const replyObject = { content, author: user, authorType: "User" };
+  const reply = await Comment.create(replyObject);
+  const comment = await Comment.findOne({ _id: commentId });
+  comment.replies.push(reply);
+  const updatedComment = await comment.save();
+  res.status(StatusCodes.OK).json({ updatedComment });
 };
 
 module.exports = {

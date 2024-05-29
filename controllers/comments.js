@@ -20,7 +20,6 @@ const getComments = async (req, res) => {
     .populate("author")
     .populate("replies")
     .exec();
-  console.log(`comment ${comments}`);
   if (!comments) {
     throw new NotFoundError(`No post with post id ${postId}`);
   }
@@ -36,7 +35,6 @@ const createComment = async (req, res) => {
   const authHeader = req.headers.authorization;
   const { content } = req.body;
   const postId = req.params.id;
-  console.log(postId);
   let comment;
 
   const post = await Post.findOne({
@@ -50,11 +48,9 @@ const createComment = async (req, res) => {
   if (authHeader && authHeader.startsWith("Bearer")) {
     const token = authHeader.split(" ")[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(payload);
 
     req.user = { userId: payload.userId };
     const user = await User.findOne({ _id: req.user.userId });
-    console.log(user);
     comment = new UserAuthorComment({
       content,
       author: user,
@@ -70,15 +66,20 @@ const createComment = async (req, res) => {
     });
   }
   await comment.save();
+
   post.comments.push(comment._id);
   await post.save();
+
+  const author = await User.findOne({ _id: post.author });
+  author.activity.push(comment);
+
+  console.log(author);
   res.status(StatusCodes.CREATED).json({ comment });
 };
 
 const deleteComment = async (req, res) => {
   const commentId = req.params.id;
   const comment = await Comment.findByIdAndRemove({ _id: commentId });
-  console.log(comment);
   if (!comment) {
     console.log("error");
     throw new NotFoundError(`No comment with id ${commentId}`);

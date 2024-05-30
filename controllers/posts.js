@@ -47,6 +47,7 @@ const getPost = async (req, res) => {
     _id: postId,
   })
     .populate("author")
+    .populate("comments")
     .exec();
 
   if (!post) {

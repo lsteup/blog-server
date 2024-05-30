@@ -15,6 +15,7 @@ const PostSchema = new Schema(
       required: true, //minLength: 200
     },
     published: { type: Boolean, default: false },
+    image: { type: String },
   },
   { timestamps: true }
 );

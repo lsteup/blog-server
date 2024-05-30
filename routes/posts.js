@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const { uploadPostImage } = require("../controllers/uploads");
+
 const {
   createPost,
   getPost,
@@ -9,6 +11,8 @@ const {
   deletePost,
   getActivity,
 } = require("../controllers/posts");
+
+router.route("/upload").post(uploadPostImage);
 
 const authMiddleware = require("../middleware/authentication");
 

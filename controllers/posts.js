@@ -31,7 +31,10 @@ const getDraft = async (req, res) => {
 };
 
 const getPosts = async (req, res) => {
-  const posts = await Post.find({ published: true }).sort("createdAt");
+  const posts = await Post.find({ published: true })
+    .populate("author")
+    .sort("createdAt")
+    .exec();
   res.status(StatusCodes.OK).json({ posts, count: posts.length });
 };
 const getPost = async (req, res) => {

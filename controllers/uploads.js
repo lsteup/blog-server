@@ -2,6 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const path = require("path");
 const { BadRequestError } = require("../errors/index");
 const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 const uploadPostImageLocal = async (req, res) => {
   if (!req.files) {
@@ -46,6 +47,7 @@ const uploadPostImage = async (req, res) => {
     }
   );
   console.log(result);
+  fs.unlinkSync(req.files.image.tempFilePath);
   res.status(StatusCodes.OK).json({ image: { src: result.secure_url } });
 };
 

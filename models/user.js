@@ -29,11 +29,11 @@ const UserSchema = new Schema({
   activity: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   image: {
     type: String,
-    require: [true, "please provide image"],
+    required: [true, "please provide image"],
   },
   bio: {
     type: String,
-    require: [true, "please provide bio"],
+    required: [true, "please provide bio"],
     minlength: 10,
     maxlength: 300,
   },

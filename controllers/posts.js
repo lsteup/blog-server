@@ -31,7 +31,15 @@ const getDraft = async (req, res) => {
 };
 
 const getPosts = async (req, res) => {
-  const posts = await Post.find({ published: true })
+  const { author, title } = req.query;
+  const query = { published: true };
+
+  if (author) query.author = author;
+  if (title) {
+    query.title = { $regex: title, $options: "i" };
+  }
+
+  const posts = await Post.find(query)
     .populate("author")
     .sort({ createdAt: -1 })
     .exec();

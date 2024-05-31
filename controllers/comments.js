@@ -53,7 +53,7 @@ const createComment = async (req, res) => {
     const user = await User.findOne({ _id: req.user.userId });
     comment = new UserAuthorComment({
       content,
-      author: user,
+      author: user._id,
       authorType: "User",
       post: postId,
     });
@@ -70,8 +70,11 @@ const createComment = async (req, res) => {
   post.comments.push(comment._id);
   await post.save();
 
+  console.log(post.author);
+
   const author = await User.findOne({ _id: post.author });
   author.activity.push(comment);
+  await author.save();
 
   console.log(author);
   res.status(StatusCodes.CREATED).json({ comment });

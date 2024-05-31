@@ -3,18 +3,20 @@ const User = require("../models/user");
 const getUser = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await User.findOne({ _id: id }).populate({
-      path: "activity",
-      options: {
-        sort: { createdAt: -1 },
-      },
-      populate: [
-        {
-          path: "post",
-          model: "Post",
+    const user = await User.findOne({ _id: id })
+      .select("-password")
+      .populate({
+        path: "activity",
+        options: {
+          sort: { createdAt: -1 },
         },
-      ],
-    });
+        populate: [
+          {
+            path: "post",
+            model: "Post",
+          },
+        ],
+      });
 
     res.json({ data: user });
   } catch (error) {
@@ -24,7 +26,7 @@ const getUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).select("-password").exec();
     res.json({ data: users });
   } catch (err) {
     res.json(err);

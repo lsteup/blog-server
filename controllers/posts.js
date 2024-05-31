@@ -6,7 +6,7 @@ const { BadRequestError, NotFoundError } = require("../errors");
 const getDrafts = async (req, res) => {
   const posts = await Post.find({
     author: req.user.userId,
-  }).sort("createdAt");
+  }).sort({ createdAt: -1 });
   res.status(StatusCodes.OK).json({ posts, count: posts.length });
 };
 
@@ -33,10 +33,11 @@ const getDraft = async (req, res) => {
 const getPosts = async (req, res) => {
   const posts = await Post.find({ published: true })
     .populate("author")
-    .sort("createdAt")
+    .sort({ createdAt: -1 })
     .exec();
   res.status(StatusCodes.OK).json({ posts, count: posts.length });
 };
+
 const getPost = async (req, res) => {
   const {
     params: { id: postId },

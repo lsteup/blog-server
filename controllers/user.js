@@ -5,6 +5,9 @@ const getUser = async (req, res) => {
   try {
     const user = await User.findOne({ _id: id }).populate({
       path: "activity",
+      options: {
+        sort: { createdAt: -1 },
+      },
       populate: [
         {
           path: "post",

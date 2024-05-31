@@ -26,6 +26,8 @@ app.use(
     max: 100, // limit each IP to 100 requests per windowMs
   })
 );
+
+app.use(express.static("./public"));
 app.use(express.json());
 app.use(fileUpload());
 app.use(helmet());

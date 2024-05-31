@@ -3,7 +3,16 @@ const User = require("../models/user");
 const getUser = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await User.findOne({ _id: id }).populate("activity").exec();
+    const user = await User.findOne({ _id: id }).populate({
+      path: "activity",
+      populate: [
+        {
+          path: "post",
+          model: "Post",
+        },
+      ],
+    });
+
     res.json({ data: user });
   } catch (error) {
     res.json(error);

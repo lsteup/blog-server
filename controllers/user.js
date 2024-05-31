@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const { StatusCodes } = require("http-status-codes");
 
 const getUser = async (req, res) => {
   const { id } = req.params;
@@ -34,7 +35,26 @@ const getUsers = async (req, res) => {
 };
 
 const editUser = async (req, res) => {
-  res.send("edit user");
+  console.log(req.body);
+  console.log(req.user.userId);
+
+  try {
+    const user = await User.findOneAndUpdate(
+      { _id: req.user.userId },
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
+    res.status(StatusCodes.OK).json({
+      user: {
+        name: user.name,
+        id: user._id,
+        bio: user.bio,
+        image: user.image,
+      },
+    });
+  } catch (error) {
+    res.json(error);
+  }
 };
 
 module.exports = { getUser, getUsers, editUser };

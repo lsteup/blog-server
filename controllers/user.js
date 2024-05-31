@@ -33,4 +33,8 @@ const getUsers = async (req, res) => {
   }
 };
 
-module.exports = { getUser, getUsers };
+const editUser = async (req, res) => {
+  res.send("edit user");
+};
+
+module.exports = { getUser, getUsers, editUser };

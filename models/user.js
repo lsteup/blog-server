@@ -33,9 +33,9 @@ const UserSchema = new Schema({
   },
   bio: {
     type: String,
-    required: [true, "please provide bio"],
-    minlength: 10,
-    maxlength: 300,
+    //required: [true, "please provide bio"],
+    //minlength: 10,
+    //maxlength: 300,
   },
 });
 

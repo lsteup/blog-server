@@ -56,7 +56,12 @@ const getPost = async (req, res) => {
     _id: postId,
   })
     .populate("author")
-    .populate("comments")
+    .populate({
+      path: "comments",
+      options: {
+        sort: { createdAt: -1 },
+      },
+    })
     .exec();
 
   if (!post) {

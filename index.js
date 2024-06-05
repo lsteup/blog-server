@@ -51,10 +51,12 @@ const authRouter = require("./routes/auth");
 const postsRouter = require("./routes/posts");
 const draftsRouter = require("./routes/drafts");
 const usersRouter = require("./routes/users");
+const commentsRouter = require("./routes/comments");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
+const { getAllComments } = require("./controllers/comments");
 
 app.use(express.json());
 
@@ -63,6 +65,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/posts", postsRouter);
 app.use("/api/v1/drafts", draftsRouter);
 app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/comments", commentsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

@@ -3,11 +3,20 @@ const {
   UserAuthorComment,
   GuestAuthorComment,
 } = require("../models/comment.js");
+
 const Post = require("../models/post");
 const User = require("../models/user.js");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const jwt = require("jsonwebtoken");
+
+const getAllComments = async (req, res) => {
+  const comments = await Comment.find({})
+    .populate("post")
+    .sort({ createdAt: -1 });
+
+  res.json({ comments });
+};
 
 const getComments = async (req, res) => {
   const {
@@ -113,4 +122,5 @@ module.exports = {
   createComment,
   deleteComment,
   createReply,
+  getAllComments,
 };

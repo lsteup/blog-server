@@ -60,6 +60,7 @@ const createComment = async (req, res) => {
 
     req.user = { userId: payload.userId };
     const user = await User.findOne({ _id: req.user.userId });
+
     comment = new UserAuthorComment({
       content,
       author: user._id,
@@ -67,9 +68,10 @@ const createComment = async (req, res) => {
       post: postId,
     });
   } else {
+    console.log(req.body.name);
     comment = new GuestAuthorComment({
       content,
-      author: req.body.name,
+      author: req.body.name || "Anonymous",
       authorType: "Guest",
       post: postId,
     });

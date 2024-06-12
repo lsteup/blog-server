@@ -81,9 +81,11 @@ const createComment = async (req, res) => {
 
   console.log(post.author);
 
-  const author = await User.findOne({ _id: post.author });
-  author.activity.push(comment);
-  await author.save();
+  const author = await User.findOneAndUpdate(
+    { _id: post.author },
+    { $push: { activity: comment } },
+    { new: true } // Optionally return the updated document
+  );
 
   console.log(author);
   res.status(StatusCodes.CREATED).json({ comment });

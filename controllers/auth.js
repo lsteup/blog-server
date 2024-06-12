@@ -2,20 +2,24 @@ const User = require("../models/user");
 const Post = require("../models/post");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
-require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
-  const user = await User.create({ ...req.body });
-  const token = user.createJWT();
-  res.status(StatusCodes.CREATED).json({
-    user: {
-      name: user.name,
-      token,
-      id: user._id,
-      bio: user.bio,
-      image: user.image,
-    },
-  });
+  try {
+    const user = await User.create({ ...req.body });
+    const token = user.createJWT();
+    res.status(StatusCodes.CREATED).json({
+      user: {
+        name: user.name,
+        token,
+        id: user._id,
+        bio: user.bio,
+        image: user.image,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
 };
 
 const login = async (req, res) => {
@@ -40,17 +44,22 @@ const login = async (req, res) => {
   const posts = await Post.find({ author: user.id }).sort("createdAt");
   user.posts = posts;
 
-  const token = user.createJWT();
-  res.status(StatusCodes.OK).json({
-    user: {
-      name: user.name,
-      token,
-      id: user._id,
-      bio: user.bio,
-      image: user.image,
-      posts,
-    },
-  });
+  try {
+    const token = user.createJWT();
+
+    res.status(StatusCodes.OK).json({
+      user: {
+        name: user.name,
+        token,
+        id: user._id,
+        bio: user.bio,
+        image: user.image,
+        posts,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = {

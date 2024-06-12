@@ -35,9 +35,6 @@ const getUsers = async (req, res) => {
 };
 
 const editUser = async (req, res) => {
-  console.log(req.body);
-  console.log(req.user.userId);
-
   try {
     const user = await User.findOneAndUpdate(
       { _id: req.user.userId },

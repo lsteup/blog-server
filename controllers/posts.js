@@ -21,7 +21,12 @@ const getDraft = async (req, res) => {
     author: userId,
   })
     .populate("author")
-    .populate("comments")
+    .populate({
+      path: "comments",
+      options: {
+        sort: { createdAt: -1 },
+      },
+    })
     .exec();
 
   if (!post) {

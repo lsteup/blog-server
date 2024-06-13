@@ -23,9 +23,7 @@ const register = async (req, res) => {
     });
   } catch (error) {
     if (error.message.startsWith("E11000 duplicate key error")) {
-      throw new UnauthenticatedError(
-        "An account with this email already exists."
-      );
+      throw new BadRequestError("An account with this email already exists.");
     }
     res.status(404).json({ error: error.message });
   }
@@ -53,22 +51,18 @@ const login = async (req, res) => {
   const posts = await Post.find({ author: user.id }).sort("createdAt");
   user.posts = posts;
 
-  try {
-    const token = user.createJWT();
+  const token = user.createJWT();
 
-    res.status(StatusCodes.OK).json({
-      user: {
-        name: user.name,
-        token,
-        id: user._id,
-        bio: user.bio,
-        image: user.image,
-        posts,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  res.status(StatusCodes.OK).json({
+    user: {
+      name: user.name,
+      token,
+      id: user._id,
+      bio: user.bio,
+      image: user.image,
+      posts,
+    },
+  });
 };
 
 module.exports = {

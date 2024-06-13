@@ -1,6 +1,8 @@
+const { BadRequestError } = require("../errors");
 const User = require("../models/user");
 const { StatusCodes } = require("http-status-codes");
 
+//get user
 const getUser = async (req, res) => {
   const { id } = req.params;
   try {
@@ -19,18 +21,20 @@ const getUser = async (req, res) => {
         ],
       });
 
-    res.json({ data: user });
+    if (!user) throw new BadRequestError(`No user with id ${id} found`);
+    res.status(StatusCodes.OK).json({ data: user });
   } catch (error) {
-    res.json(error);
+    res.status(404).json({ error: error.message });
   }
 };
 
+//get users
 const getUsers = async (req, res) => {
   try {
     const users = await User.find({}).select("-password").exec();
-    res.json({ data: users });
+    res.status(StatusCodes.OK).json({ data: users });
   } catch (err) {
-    res.json(err);
+    res.status(404).json({ error: err.message });
   }
 };
 
@@ -50,7 +54,7 @@ const editUser = async (req, res) => {
       },
     });
   } catch (error) {
-    res.json(error);
+    res.status(404).json(error);
   }
 };
 

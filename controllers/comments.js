@@ -10,14 +10,16 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const jwt = require("jsonwebtoken");
 
+//get all comments
 const getAllComments = async (req, res) => {
   const comments = await Comment.find({})
     .populate("post")
     .sort({ createdAt: -1 });
 
-  res.json({ comments });
+  res.status(StatusCodes.OK).json({ comments });
 };
 
+//get comments on a post
 const getComments = async (req, res) => {
   const {
     params: { id: postId },
@@ -30,16 +32,18 @@ const getComments = async (req, res) => {
     .populate("replies")
     .exec();
   if (!comments) {
-    throw new NotFoundError(`No post with post id ${postId}`);
+    throw new NotFoundError(`No comments on post with post id ${postId} found`);
   }
 
   res.status(StatusCodes.OK).json({ comments: comments });
 };
 
+//get comment (not used)
 const getComment = async (req, res) => {
   res.send("get comment");
 };
 
+//create comment
 const createComment = async (req, res) => {
   const authHeader = req.headers.authorization;
   const { content } = req.body;
@@ -50,6 +54,7 @@ const createComment = async (req, res) => {
     published: true,
     _id: postId,
   });
+
   if (!post) {
     throw new NotFoundError(`No post with id ${postId}`);
   }
@@ -68,7 +73,6 @@ const createComment = async (req, res) => {
       post: postId,
     });
   } else {
-    console.log(req.body.name);
     comment = new GuestAuthorComment({
       content,
       author: req.body.name || "Anonymous",
@@ -81,28 +85,25 @@ const createComment = async (req, res) => {
   post.comments.push(comment._id);
   await post.save();
 
-  console.log(post.author);
-
-  const author = await User.findOneAndUpdate(
+  await User.findOneAndUpdate(
     { _id: post.author },
-    { $push: { activity: comment } },
-    { new: true } // Optionally return the updated document
+    { $push: { activity: comment } }
   );
 
-  console.log(author);
   res.status(StatusCodes.CREATED).json({ comment });
 };
 
+//delete comment
 const deleteComment = async (req, res) => {
   const commentId = req.params.id;
   const comment = await Comment.findByIdAndRemove({ _id: commentId });
   if (!comment) {
-    console.log("error");
     throw new NotFoundError(`No comment with id ${commentId}`);
   }
   res.status(StatusCodes.OK).send();
 };
 
+//create reply (not used)
 const createReply = async (req, res) => {
   const commentId = req.params.id;
   const authHeader = req.headers.authorization;

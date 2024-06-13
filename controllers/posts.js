@@ -3,6 +3,7 @@ const User = require("../models/user");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 
+//get drafts
 const getDrafts = async (req, res) => {
   const posts = await Post.find({
     author: req.user.userId,
@@ -10,6 +11,7 @@ const getDrafts = async (req, res) => {
   res.status(StatusCodes.OK).json({ posts, count: posts.length });
 };
 
+//get draft
 const getDraft = async (req, res) => {
   const {
     user: { userId },
@@ -20,7 +22,10 @@ const getDraft = async (req, res) => {
     _id: postId,
     author: userId,
   })
-    .populate("author")
+    .populate({
+      path: "author",
+      select: "-password",
+    })
     .populate({
       path: "comments",
       options: {
@@ -35,6 +40,7 @@ const getDraft = async (req, res) => {
   res.status(StatusCodes.OK).json({ post });
 };
 
+//get posts
 const getPosts = async (req, res) => {
   const { author, title } = req.query;
   const query = { published: true };
@@ -45,12 +51,16 @@ const getPosts = async (req, res) => {
   }
 
   const posts = await Post.find(query)
-    .populate("author")
+    .populate({
+      path: "author",
+      select: "-password",
+    })
     .sort({ createdAt: -1 })
     .exec();
   res.status(StatusCodes.OK).json({ posts, count: posts.length });
 };
 
+//get post
 const getPost = async (req, res) => {
   const {
     params: { id: postId },
@@ -60,7 +70,10 @@ const getPost = async (req, res) => {
     published: true,
     _id: postId,
   })
-    .populate("author")
+    .populate({
+      path: "author",
+      select: "-password",
+    })
     .populate({
       path: "comments",
       options: {
@@ -75,22 +88,19 @@ const getPost = async (req, res) => {
   res.status(StatusCodes.OK).json({ post });
 };
 
+//create post
 const createPost = async (req, res) => {
   req.body.author = req.user.userId;
   const post = await Post.create(req.body);
   res.status(StatusCodes.CREATED).json({ post });
 };
 
+//update post
 const updatePost = async (req, res) => {
   const {
-    body: { published, content, title },
     user: { userId },
     params: { id: postId },
   } = req;
-
-  /*if (content === "" || title === "" || published === "") {
-    throw new BadRequestError("Content or Title or Published cannot be empty");
-  }*/
 
   const post = await Post.findOneAndUpdate(
     { _id: postId, author: userId },
@@ -104,6 +114,7 @@ const updatePost = async (req, res) => {
   res.status(StatusCodes.OK).json({ post });
 };
 
+//delete post
 const deletePost = async (req, res) => {
   const {
     user: { userId },
@@ -121,9 +132,19 @@ const deletePost = async (req, res) => {
   res.status(StatusCodes.OK).send();
 };
 
+//get activity
 const getActivity = async (req, res) => {
-  const user = await User.findOne({ _id: req.user.userId });
-  res.status(StatusCodes.OK).send(user.activity);
+  const user = await User.findOne({ _id: req.user.userId }).populate({
+    path: "activity",
+    options: {
+      sort: { createdAt: -1 },
+    },
+    populate: {
+      path: "post",
+      select: "title",
+    },
+  });
+  res.status(StatusCodes.OK).send({ activity: user.activity });
 };
 
 module.exports = {

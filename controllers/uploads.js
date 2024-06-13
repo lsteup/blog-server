@@ -38,6 +38,7 @@ const uploadPostImageLocal = async (req, res) => {
   }
 };
 
+//upload post image
 const uploadPostImage = async (req, res) => {
   const result = await cloudinary.uploader.upload(
     req.files.image.tempFilePath,
@@ -46,7 +47,6 @@ const uploadPostImage = async (req, res) => {
       folder: "blog-uploads",
     }
   );
-  console.log(result);
   fs.unlinkSync(req.files.image.tempFilePath);
   res.status(StatusCodes.OK).json({ image: { src: result.secure_url } });
 };

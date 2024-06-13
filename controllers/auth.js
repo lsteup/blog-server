@@ -5,6 +5,10 @@ const { BadRequestError, UnauthenticatedError } = require("../errors");
 const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
+  if (req.body.code !== "MEMBERCODE27956") {
+    throw new UnauthenticatedError("Invalid Membership Code");
+  }
+
   try {
     const user = await User.create({ ...req.body });
     const token = user.createJWT();
@@ -18,6 +22,11 @@ const register = async (req, res) => {
       },
     });
   } catch (error) {
+    if (error.message.startsWith("E11000 duplicate key error")) {
+      throw new UnauthenticatedError(
+        "An account with this email already exists."
+      );
+    }
     res.status(404).json({ error: error.message });
   }
 };

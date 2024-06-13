@@ -91,6 +91,15 @@ const getPost = async (req, res) => {
 //create post
 const createPost = async (req, res) => {
   req.body.author = req.user.userId;
+  if (req.body.title.length > 200)
+    throw new BadRequestError(
+      "Please choose a shorter title (under 200 characters)"
+    );
+
+  if (!req.body.title)
+    throw new BadRequestError("Your post must have a title.");
+  if (!req.body.content)
+    throw new BadRequestError("Your post must have content.");
   const post = await Post.create(req.body);
   res.status(StatusCodes.CREATED).json({ post });
 };

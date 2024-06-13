@@ -40,6 +40,18 @@ const getUsers = async (req, res) => {
 
 const editUser = async (req, res) => {
   try {
+    if (
+      (req.body.name && req.body.name.length < 3) ||
+      (req.body.name && req.body.name.length > 50)
+    )
+      throw new BadRequestError(
+        "Please choose a name between 3 and 50 characters long"
+      );
+
+    if (req.body.bio && req.body.bio.length > 300)
+      throw new BadRequestError(
+        "Please contain your bio to under 300 characters."
+      );
     const user = await User.findOneAndUpdate(
       { _id: req.user.userId },
       { $set: req.body },
@@ -54,7 +66,7 @@ const editUser = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(404).json(error);
+    res.status(404).json({ error: error.message });
   }
 };
 

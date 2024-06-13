@@ -9,6 +9,16 @@ const register = async (req, res) => {
     throw new UnauthenticatedError("Invalid Membership Code");
   }
 
+  if (req.body.name.length < 3 || req.body.name.length > 50)
+    throw new BadRequestError(
+      "Please choose a name between 3 and 50 characters long"
+    );
+
+  if (req.body.bio.length > 300)
+    throw new BadRequestError(
+      "Please contain your bio to under 300 characters."
+    );
+
   try {
     const user = await User.create({ ...req.body });
     const token = user.createJWT();

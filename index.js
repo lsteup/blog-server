@@ -43,7 +43,7 @@ app.use(xss());
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.get("/", (req, res) => {
-  res.send('<h1>Blog API</h1><a href="/api-docs">Documentation</a>');
+  res.send('<h1>BlogSpace API</h1><a href="/api-docs">Documentation</a>');
 });
 
 //routers

@@ -288,7 +288,7 @@ paths:
       servers:
         - url: https://blog-server-wto6.onrender.com/api/v1
           variables: {}
-  /posts/{postId}/comments{commentId}:
+  /posts/{postId}/comments/{commentId}:
     parameters:
       - in: path
         name: postId

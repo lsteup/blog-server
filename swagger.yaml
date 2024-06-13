@@ -10,7 +10,7 @@ paths:
   /auth/register:
     post:
       tags:
-        - Auth
+        - Authentication
       summary: register user
       operationId: registeruser
       parameters: []
@@ -21,25 +21,22 @@ paths:
             schema:
               allOf:
                 - $ref: "#/components/schemas/registeruserrequest"
-                - example:
-                    name: lulu
-                    email: lulu5656@gmail.com
-                    password: secret
-            example:
-              name: lulu
-              email: lulu5656@gmail.com
-              password: secret
+                - {}
         required: true
       responses:
         "200":
           description: ""
           headers: {}
       deprecated: false
-      security: []
+      security:
+        - bearer: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
   /auth/login:
     post:
       tags:
-        - Auth
+        - Authentication
       summary: login user
       operationId: loginuser
       parameters: []
@@ -51,18 +48,20 @@ paths:
               allOf:
                 - $ref: "#/components/schemas/loginuserrequest"
                 - example:
-                    email: ann2@gmail.com
-                    password: secret
+                    email: john@email.com
+                    password: password
             example:
-              email: ann2@gmail.com
-              password: secret
+              email: john@email.com
+              password: password
         required: true
       responses:
         "200":
           description: ""
           headers: {}
       deprecated: false
-      security: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
   /posts:
     post:
       tags:
@@ -77,14 +76,7 @@ paths:
             schema:
               allOf:
                 - $ref: "#/components/schemas/createpostrequest"
-                - example:
-                    title: my first blog post!
-                    content: this is blog content
-                    published: false
-            example:
-              title: my first blog post!
-              content: this is blog content
-              published: false
+                - {}
         required: true
       responses:
         "200":
@@ -93,6 +85,9 @@ paths:
       deprecated: false
       security:
         - bearer: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
     get:
       tags:
         - Posts
@@ -105,20 +100,6 @@ paths:
           headers: {}
       deprecated: false
       security: []
-  /drafts:
-    get:
-      tags:
-        - Posts
-      summary: get drafts
-      operationId: getdrafts
-      parameters: []
-      responses:
-        "200":
-          description: ""
-          headers: {}
-      deprecated: false
-      security:
-        - bearer: []
   /posts/{id}:
     parameters:
       - in: path
@@ -139,6 +120,9 @@ paths:
           headers: {}
       deprecated: false
       security: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
     patch:
       tags:
         - Posts
@@ -153,12 +137,8 @@ paths:
               allOf:
                 - $ref: "#/components/schemas/updatepostrequest"
                 - example:
-                    content: this is a long, interesting post.
-                    title: updated post
                     published: true
             example:
-              content: this is a very long, very interesting post!
-              title: updated post
               published: true
         required: true
       responses:
@@ -168,6 +148,9 @@ paths:
       deprecated: false
       security:
         - bearer: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
     delete:
       tags:
         - Posts
@@ -179,6 +162,56 @@ paths:
           description: ""
           headers: {}
       deprecated: false
+      security:
+        - bearer: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
+  /posts/upload:
+    post:
+      tags:
+        - Posts
+      summary: upload photo
+      operationId: uploadphoto
+      parameters: []
+      requestBody:
+        content:
+          multipart/form-data:
+            encoding: {}
+            schema:
+              required:
+                - image
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+        required: false
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
+  /drafts:
+    get:
+      tags:
+        - Drafts
+      summary: get drafts
+      operationId: getdrafts
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
   /drafts/{id}:
     parameters:
       - in: path
@@ -189,7 +222,7 @@ paths:
         description: The draft ID
     get:
       tags:
-        - Posts
+        - Drafts
       summary: get draft
       operationId: getdraft
       parameters: []
@@ -200,6 +233,9 @@ paths:
       deprecated: false
       security:
         - bearer: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
   /posts/{id}/comments:
     parameters:
       - in: path
@@ -220,18 +256,38 @@ paths:
           headers: {}
       deprecated: false
       security: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
     post:
       tags:
         - Comments
-      summary: create comments
-      operationId: createcomments
+      summary: create comment
+      operationId: createcomment
       parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/createcommentsrequest"
+                - example:
+                    content: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    name: john
+            example:
+              content: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              name: john
+        required: true
       responses:
         "200":
           description: ""
           headers: {}
       deprecated: false
       security: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
   /posts/{postId}/comments{commentId}:
     parameters:
       - in: path
@@ -257,6 +313,97 @@ paths:
           description: ""
           headers: {}
       deprecated: false
+      security:
+        - bearer: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
+
+  /posts/activity:
+    get:
+      tags:
+        - Users
+      summary: get activity
+      operationId: getactivity
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
+  /users:
+    get:
+      tags:
+        - Users
+      summary: get users
+      operationId: getusers
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The user ID
+    get:
+      tags:
+        - Users
+      summary: get user
+      operationId: getuser
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
+  /users/profile/edit:
+    patch:
+      tags:
+        - Users
+      summary: edit user
+      operationId: edituser
+      parameters: []
+      requestBody:
+        description: ""
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/edituserrequest"
+                - example:
+                    name: john
+            example:
+              name: john
+        required: true
+      responses:
+        "200":
+          description: ""
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+      servers:
+        - url: https://blog-server-wto6.onrender.com/api/v1
+          variables: {}
 components:
   schemas:
     registeruserrequest:
@@ -265,6 +412,8 @@ components:
         - name
         - email
         - password
+        - bio
+        - image
       type: object
       properties:
         name:
@@ -273,28 +422,24 @@ components:
           type: string
         password:
           type: string
-      example:
-        name: lulu
-        email: lulu5656@gmail.com
-        password: secret
+        bio:
+          type: string
+        image:
+          type: string
     createpostrequest:
       title: createpostrequest
       required:
         - title
         - content
-        - published
+        - image
       type: object
       properties:
         title:
           type: string
         content:
           type: string
-        published:
-          type: boolean
-      example:
-        title: my first blog post!
-        content: this is blog content
-        published: false
+        image:
+          type: string
     loginuserrequest:
       title: loginuserrequest
       required:
@@ -307,35 +452,55 @@ components:
         password:
           type: string
       example:
-        email: ann2@gmail.com
-        password: secret
-    updatepostrequest:
-      title: updatepostrequest
+        email: john@email.com
+        password: password
+    createcommentsrequest:
+      title: createcommentsrequest
       required:
         - content
-        - title
-        - published
+        - name
       type: object
       properties:
         content:
           type: string
-        title:
+        name:
           type: string
+      example:
+        content: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        name: john
+    updatepostrequest:
+      title: updatepostrequest
+      required:
+        - published
+      type: object
+      properties:
         published:
           type: boolean
       example:
-        content: this is a very long, very interesting post!
-        title: updated post
         published: true
+    edituserrequest:
+      title: edituserrequest
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+      example:
+        name: john
   securitySchemes:
     bearer:
       type: http
       scheme: bearer
 security: []
 tags:
-  - name: Auth
+  - name: Authentication
     description: ""
   - name: Posts
     description: ""
+  - name: Drafts
+    description: ""
   - name: Comments
+    description: ""
+  - name: Users
     description: ""

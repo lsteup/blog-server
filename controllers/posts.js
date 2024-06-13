@@ -111,6 +111,11 @@ const updatePost = async (req, res) => {
     params: { id: postId },
   } = req;
 
+  if (req.body.title && req.body.title.length > 200)
+    throw new BadRequestError(
+      "Please choose a shorter title (under 200 characters)"
+    );
+
   const post = await Post.findOneAndUpdate(
     { _id: postId, author: userId },
     { $set: req.body },

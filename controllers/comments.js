@@ -50,6 +50,9 @@ const createComment = async (req, res) => {
   const postId = req.params.id;
   let comment;
 
+  if (!req.body.content)
+    throw new BadRequestError("Please provide content in your comment");
+
   const post = await Post.findOne({
     published: true,
     _id: postId,

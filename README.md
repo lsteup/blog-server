@@ -167,6 +167,12 @@ Update profile information.
   - 200 OK
   - Body: JSON object of user.
 
+### Live Demo
+
+[Live Link](https://blog-server-wto6.onrender.com/)
+[Front End #1] (https://blog-user-site.vercel.app/)
+[Front End #2] (https://blog-site-three-topaz.vercel.app/)
+
 ## Credits
 
 This project is for educational purposes only. It was built as part of The Odin Project Node.js curriculum.

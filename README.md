@@ -169,9 +169,9 @@ Update profile information.
 
 ### Live Demo
 
-[Live Link](https://blog-server-wto6.onrender.com/)
-[Front End #1](https://blog-user-site.vercel.app/)
-[Front End #2](https://blog-site-three-topaz.vercel.app/)
+- [Live Link](https://blog-server-wto6.onrender.com/)
+- [Front End #1](https://blog-user-site.vercel.app/)
+- [Front End #2](https://blog-site-three-topaz.vercel.app/)
 
 ## Credits
 

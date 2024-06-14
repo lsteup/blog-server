@@ -40,6 +40,8 @@ const getUsers = async (req, res) => {
 
 const editUser = async (req, res) => {
   try {
+    if (!req.body.name.length)
+      throw new BadRequestError("Name field cannot be empty");
     if (
       (req.body.name && req.body.name.length < 3) ||
       (req.body.name && req.body.name.length > 50)

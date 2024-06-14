@@ -111,6 +111,11 @@ const updatePost = async (req, res) => {
     params: { id: postId },
   } = req;
 
+  if (!req.body.title.length)
+    throw new BadRequestError("Post must have a title");
+
+  if (!req.body.content.length)
+    throw new BadRequestError("Post must have content");
   if (req.body.title && req.body.title.length > 200)
     throw new BadRequestError(
       "Please choose a shorter title (under 200 characters)"

@@ -140,9 +140,9 @@ const deletePost = async (req, res) => {
     params: { id: postId },
   } = req;
 
-  const post = await Post.findByIdAndRemove({
-    _id: postId,
-  });
+  const post = await Post.findByIdAndDelete(postId);
+
+  console.log(postId);
 
   if (!post) {
     throw new NotFoundError(`No post with id ${postId}`);

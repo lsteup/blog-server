@@ -137,13 +137,11 @@ const updatePost = async (req, res) => {
 //delete post
 const deletePost = async (req, res) => {
   const {
-    user: { userId },
     params: { id: postId },
   } = req;
 
   const post = await Post.findByIdAndRemove({
     _id: postId,
-    author: userId,
   });
 
   if (!post) {
